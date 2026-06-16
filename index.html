@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Stack — Curated recommendations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { background: #ffffff; }
+
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --muted: #888888;
+      --border: #e8e8e8;
+      --pill-bg: #f2f2f2;
+      --pill-active: #111111;
+      --pill-active-text: #ffffff;
+      --card-hover: #fafafa;
+      --img-bg: #f6f6f6;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Profile ─── */
+    .profile {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 56px 48px 48px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .profile-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #f0f0f0;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 38% 72%;
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .profile-name {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    .profile-socials {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #111;
+      opacity: 0.45;
+      transition: opacity 0.15s;
+      text-decoration: none;
+    }
+
+    .social-link:hover {
+      opacity: 1;
+    }
+
+    .social-link svg {
+      width: 17px;
+      height: 17px;
+      fill: currentColor;
+    }
+
+    /* ─── Filters ─── */
+    .filters {
+      padding: 0 48px 36px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 100px;
+      background: var(--pill-bg);
+      color: var(--muted);
+      transition: background 0.15s, color 0.15s;
+      letter-spacing: 0.01em;
+    }
+
+    .filter-btn:hover {
+      background: #e8e8e8;
+      color: var(--text);
+    }
+
+    .filter-btn.active {
+      background: var(--pill-active);
+      color: var(--pill-active-text);
+    }
+
+    /* ─── Grid ─── */
+    .grid-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 48px 80px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: white;
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+    }
+
+    /* ─── Card ─── */
+    .card {
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s;
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card:hover {
+      background: var(--card-hover);
+    }
+
+    .card.hidden {
+      display: none;
+    }
+
+    /* ─── Card image ─── */
+    .card-image {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: var(--img-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 28px;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-image img {
+      transform: scale(1.03);
+    }
+
+    /* placeholder for missing images */
+    .card-image.placeholder {
+      background: var(--img-bg);
+    }
+
+    .card-image.placeholder::after {
+      content: attr(data-initials);
+      font-size: 36px;
+      font-weight: 600;
+      letter-spacing: -1px;
+      color: #d0d0d0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ─── Card content ─── */
+    .card-content {
+      padding: 20px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+
+    .card-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      flex: 1;
+    }
+
+    .card-name {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: -0.2px;
+      line-height: 1.3;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2px;
+    }
+
+    .card-price {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .card-arrow {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 13px;
+      flex-shrink: 0;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+
+    .card:hover .card-arrow {
+      border-color: #111;
+      background: #111;
+      color: #fff;
+    }
+
+    /* ─── Empty state ─── */
+    .empty {
+      display: none;
+      padding: 80px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 48px;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .footer-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-disclaimer {
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: #aaaaaa;
+      max-width: 640px;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .profile { padding: 36px 24px 32px; }
+      .filters { padding: 0 24px 28px; }
+      .grid-wrapper { padding: 0 24px 60px; }
+      footer { padding: 24px; }
+      .footer-top { flex-direction: column; align-items: flex-start; gap: 4px; }
+    }
+
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="profile">
+    <div class="profile-avatar">
+      <img src="profile.png" alt="Mat" />
+    </div>
+    <div class="profile-info">
+      <span class="profile-name">@matcreates</span>
+      <div class="profile-socials">
+
+        <!-- YouTube -->
+        <a class="social-link" href="https://youtube.com/@mat_creates" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M31.6812 9.60005C31.6812 9.60005 31.3688 7.3938 30.4062 6.42505C29.1875 5.15006 27.825 5.1438 27.2 5.0688C22.725 4.7438 16.0063 4.7438 16.0063 4.7438H15.9937C15.9937 4.7438 9.275 4.7438 4.8 5.0688C4.175 5.1438 2.8125 5.15006 1.59375 6.42505C0.63125 7.3938 0.325 9.60005 0.325 9.60005C0.325 9.60005 0 12.1938 0 14.7813V17.2063C0 19.7938 0.31875 22.3876 0.31875 22.3876C0.31875 22.3876 0.63125 24.5938 1.5875 25.5626C2.80625 26.8376 4.40625 26.7938 5.11875 26.9313C7.68125 27.1751 16 27.2501 16 27.2501C16 27.2501 22.725 27.2376 27.2 26.9188C27.825 26.8438 29.1875 26.8376 30.4062 25.5626C31.3688 24.5938 31.6812 22.3876 31.6812 22.3876C31.6812 22.3876 32 19.8001 32 17.2063V14.7813C32 12.1938 31.6812 9.60005 31.6812 9.60005ZM12.6938 20.1501V11.1563L21.3375 15.6688L12.6938 20.1501Z" fill="black"/>
+          </svg>
+        </a>
+
+        <!-- Instagram -->
+        <a class="social-link" href="https://instagram.com/matcreates" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip0_2_191)">
+            <path d="M16 2.88125C20.275 2.88125 20.7813 2.9 22.4625 2.975C24.025 3.04375 24.8688 3.30625 25.4313 3.525C26.175 3.8125 26.7125 4.1625 27.2688 4.71875C27.8313 5.28125 28.175 5.8125 28.4625 6.55625C28.6813 7.11875 28.9438 7.96875 29.0125 9.525C29.0875 11.2125 29.1063 11.7188 29.1063 15.9875C29.1063 20.2625 29.0875 20.7688 29.0125 22.45C28.9438 24.0125 28.6813 24.8563 28.4625 25.4188C28.175 26.1625 27.825 26.7 27.2688 27.2563C26.7063 27.8188 26.175 28.1625 25.4313 28.45C24.8688 28.6688 24.0188 28.9313 22.4625 29C20.775 29.075 20.2688 29.0938 16 29.0938C11.725 29.0938 11.2188 29.075 9.5375 29C7.975 28.9313 7.13125 28.6688 6.56875 28.45C5.825 28.1625 5.2875 27.8125 4.73125 27.2563C4.16875 26.6938 3.825 26.1625 3.5375 25.4188C3.31875 24.8563 3.05625 24.0063 2.9875 22.45C2.9125 20.7625 2.89375 20.2563 2.89375 15.9875C2.89375 11.7125 2.9125 11.2063 2.9875 9.525C3.05625 7.9625 3.31875 7.11875 3.5375 6.55625C3.825 5.8125 4.175 5.275 4.73125 4.71875C5.29375 4.15625 5.825 3.8125 6.56875 3.525C7.13125 3.30625 7.98125 3.04375 9.5375 2.975C11.2188 2.9 11.725 2.88125 16 2.88125ZM16 0C11.6563 0 11.1125 0.01875 9.40625 0.09375C7.70625 0.16875 6.5375 0.44375 5.525 0.8375C4.46875 1.25 3.575 1.79375 2.6875 2.6875C1.79375 3.575 1.25 4.46875 0.8375 5.51875C0.44375 6.5375 0.16875 7.7 0.09375 9.4C0.01875 11.1125 0 11.6562 0 16C0 20.3438 0.01875 20.8875 0.09375 22.5938C0.16875 24.2938 0.44375 25.4625 0.8375 26.475C1.25 27.5313 1.79375 28.425 2.6875 29.3125C3.575 30.2 4.46875 30.75 5.51875 31.1562C6.5375 31.55 7.7 31.825 9.4 31.9C11.1063 31.975 11.65 31.9937 15.9938 31.9937C20.3375 31.9937 20.8813 31.975 22.5875 31.9C24.2875 31.825 25.4563 31.55 26.4688 31.1562C27.5188 30.75 28.4125 30.2 29.3 29.3125C30.1875 28.425 30.7375 27.5313 31.1438 26.4813C31.5375 25.4625 31.8125 24.3 31.8875 22.6C31.9625 20.8938 31.9813 20.35 31.9813 16.0063C31.9813 11.6625 31.9625 11.1188 31.8875 9.4125C31.8125 7.7125 31.5375 6.54375 31.1438 5.53125C30.75 4.46875 30.2063 3.575 29.3125 2.6875C28.425 1.8 27.5313 1.25 26.4813 0.84375C25.4625 0.45 24.3 0.175 22.6 0.1C20.8875 0.01875 20.3438 0 16 0Z" fill="black"/>
+            <path d="M16 7.78125C11.4625 7.78125 7.78125 11.4625 7.78125 16C7.78125 20.5375 11.4625 24.2188 16 24.2188C20.5375 24.2188 24.2188 20.5375 24.2188 16C24.2188 11.4625 20.5375 7.78125 16 7.78125ZM16 21.3312C13.0563 21.3312 10.6687 18.9438 10.6687 16C10.6687 13.0563 13.0563 10.6687 16 10.6687C18.9438 10.6687 21.3312 13.0563 21.3312 16C21.3312 18.9438 18.9438 21.3312 16 21.3312Z" fill="black"/>
+            <path d="M26.4625 7.4562C26.4625 8.5187 25.6 9.37495 24.5438 9.37495C23.4813 9.37495 22.625 8.51245 22.625 7.4562C22.625 6.3937 23.4875 5.53745 24.5438 5.53745C25.6 5.53745 26.4625 6.39995 26.4625 7.4562Z" fill="black"/>
+            </g>
+            <defs><clipPath id="clip0_2_191"><rect width="32" height="32" fill="white"/></clipPath></defs>
+          </svg>
+        </a>
+
+        <!-- X / Twitter -->
+        <a class="social-link" href="https://x.com/mat_creates" target="_blank" rel="noopener" aria-label="X">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24.4351 2.53854H28.9331L19.1063 13.7699L30.6667 29.0532H21.615L14.5254 19.7839L6.4133 29.0532H1.91262L12.4233 17.04L1.33337 2.53854H10.6149L17.0232 11.011L24.4351 2.53854ZM22.8565 26.3609H25.3488L9.26057 5.08939H6.58599L22.8565 26.3609Z" fill="black"/>
+          </svg>
+        </a>
+
+        <!-- TikTok -->
+        <a class="social-link" href="https://tiktok.com/@matcreates" target="_blank" rel="noopener" aria-label="TikTok">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.7633 0H17.3704V21.7971C17.3704 24.3942 15.2962 26.5276 12.715 26.5276C10.1337 26.5276 8.05955 24.3942 8.05955 21.7971C8.05955 19.2464 10.0877 17.1594 12.5767 17.0667V11.5942C7.09158 11.6869 2.66663 16.1855 2.66663 21.7971C2.66663 27.4551 7.18377 32 12.7611 32C18.3383 32 22.8555 27.4087 22.8555 21.7971V10.6203C24.8836 12.1044 27.3726 12.9855 30 13.0319V7.55942C25.9438 7.42029 22.7633 4.08116 22.7633 0Z" fill="black"/>
+          </svg>
+        </a>
+
+        <!-- Threads -->
+        <a class="social-link" href="https://threads.net/@matcreates" target="_blank" rel="noopener" aria-label="Threads">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23.5895 14.8314C23.4516 14.7653 23.3116 14.7017 23.1698 14.6409C22.9228 10.0897 20.436 7.48417 16.2603 7.4575C16.2414 7.45738 16.2225 7.45738 16.2036 7.45738C13.706 7.45738 11.6288 8.52348 10.3503 10.4635L12.6468 12.0388C13.6019 10.5897 15.1008 10.2808 16.2047 10.2808C16.2175 10.2808 16.2303 10.2808 16.2429 10.2809C17.6178 10.2897 18.6553 10.6894 19.3268 11.469C19.8155 12.0366 20.1423 12.8208 20.3041 13.8106C19.0851 13.6035 17.7668 13.5398 16.3575 13.6206C12.3874 13.8492 9.83514 16.1646 10.0066 19.382C10.0935 21.014 10.9066 22.418 12.2958 23.3352C13.4704 24.1105 14.9831 24.4897 16.5553 24.4038C18.6316 24.29 20.2605 23.4978 21.3968 22.0493C22.2598 20.9493 22.8056 19.5238 23.0466 17.7277C24.0361 18.3248 24.7695 19.1107 25.1745 20.0553C25.8631 21.6612 25.9033 24.3 23.7501 26.4513C21.8636 28.336 19.596 29.1513 16.1689 29.1765C12.3673 29.1483 9.49226 27.9292 7.62298 25.5528C5.87254 23.3277 4.96791 20.1137 4.93416 16C4.96791 11.8863 5.87254 8.67227 7.62298 6.44712C9.49226 4.07082 12.3673 2.85167 16.1688 2.82342C19.998 2.85188 22.9231 4.0769 24.864 6.46467C25.8156 7.6356 26.5331 9.10813 27.0061 10.8251L29.6973 10.107C29.124 7.9937 28.2218 6.17262 26.9941 4.66233C24.506 1.60111 20.867 0.0325247 16.1782 0H16.1594C11.4802 0.0324117 7.88198 1.60697 5.46468 4.67988C3.31361 7.4144 2.20403 11.2193 2.16674 15.9888L2.16663 16L2.16674 16.0112C2.20403 20.7807 3.31361 24.5857 5.46468 27.3202C7.88198 30.393 11.4802 31.9677 16.1594 32H16.1782C20.3383 31.9712 23.2706 30.882 25.6863 28.4685C28.8468 25.311 28.7516 21.3532 27.71 18.9235C26.9626 17.1812 25.5378 15.766 23.5895 14.8314ZM16.4067 21.5845C14.6667 21.6825 12.859 20.9015 12.7699 19.2287C12.7038 17.9883 13.6526 16.6043 16.5135 16.4395C16.8411 16.4206 17.1626 16.4113 17.4785 16.4113C18.5176 16.4113 19.4898 16.5123 20.3736 16.7055C20.044 20.8225 18.1103 21.491 16.4067 21.5845Z" fill="black"/>
+          </svg>
+        </a>
+
+      </div>
+    </div>
+  </header>
+
+  <nav class="filters">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="apps">Apps</button>
+    <button class="filter-btn" data-filter="camera">Camera</button>
+    <button class="filter-btn" data-filter="audio">Audio</button>
+    <button class="filter-btn" data-filter="desk">Desk Setup</button>
+    <button class="filter-btn" data-filter="mobile">Mobile</button>
+  </nav>
+
+  <div class="grid-wrapper" id="grid-wrapper">
+  <main class="grid" id="grid">
+
+    <!-- ── APPS ── -->
+    <a class="card" data-category="apps" href="https://framer.link/mathis-garcia" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-framer.jpg" alt="Framer" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Apps</span>
+        <div class="card-body">
+          <span class="card-name">Framer</span>
+          <span class="card-desc">My go-to website builder. Powerful, fast, and design-first.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">From $15/mo</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" data-category="apps" href="https://livekindred.com?invite_code=mat.gar14" target="_blank" rel="noopener" style="display:none">
+      <div class="card-image"><img src="thumb-kindred.jpg" alt="Kindred" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Apps</span>
+        <div class="card-body">
+          <span class="card-name">Kindred</span>
+          <span class="card-desc">The travel app I use to find unique stays while on the road.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">From $200/yr</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" data-category="apps" href="https://jitter.video" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-jitter.jpg" alt="Jitter" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Apps</span>
+        <div class="card-body">
+          <span class="card-name">Jitter</span>
+          <span class="card-desc">My favorite tool for motion design. Figma-like, but animated.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">From $15/mo</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" data-category="apps" href="https://figma.com" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-figma.jpg" alt="Figma" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Apps</span>
+        <div class="card-body">
+          <span class="card-name">Figma</span>
+          <span class="card-desc">Where every design starts. The best UI and design tool out there.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">From $15/mo</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- ── CAMERA ── -->
+    <a class="card" data-category="camera" href="https://amzn.to/3RBp6sA" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-sony-fx30.jpg" alt="Sony FX-30" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Camera</span>
+        <div class="card-body">
+          <span class="card-name">Sony FX-30</span>
+          <span class="card-desc">My main camera for video. Super 35, compact, and incredible image quality.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">$1,499</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" data-category="camera" href="https://amzn.to/3PJhGTB" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-fujifilm-x100vi.jpg" alt="Fujifilm X100VI" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Camera</span>
+        <div class="card-body">
+          <span class="card-name">Fujifilm X100VI</span>
+          <span class="card-desc">The perfect compact for travel and street. Stunning film simulations.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">$1,599</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" data-category="camera" href="https://amzn.to/4u8kMyH" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-sigma-lens.jpg" alt="Sigma Lens" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Camera</span>
+        <div class="card-body">
+          <span class="card-name">Sigma Lens</span>
+          <span class="card-desc">My go-to zoom lens. Sharp, fast, and compact for everyday shooting.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">$499</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" data-category="camera" href="https://amzn.to/4o29sCO" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-sony-15mm-lens.jpg" alt="Sony 15mm Lens" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Camera</span>
+        <div class="card-body">
+          <span class="card-name">Sony 15mm Lens</span>
+          <span class="card-desc">Ultra-compact prime for wide shots. Tiny footprint, stunning sharpness.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">$598</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" data-category="camera" href="https://amzn.to/4vgvEey" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-feelworld-monitor.jpg" alt="Feelworld Monitor" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Camera</span>
+        <div class="card-body">
+          <span class="card-name">Feelworld Monitor</span>
+          <span class="card-desc">On-camera field monitor for nailing focus and exposure on every shot.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">$169</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" data-category="camera" href="https://amzn.to/4u83MbE" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-freewell-tripod.jpg" alt="Freewell Tripod" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Camera</span>
+        <div class="card-body">
+          <span class="card-name">Freewell Tripod</span>
+          <span class="card-desc">Lightweight and solid. My travel tripod for solo setups and timelapses.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">$129</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- ── AUDIO ── -->
+    <a class="card" data-category="audio" href="https://amzn.to/4x4DJF9" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-nothing-headphones.jpg" alt="Nothing Headphones" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Audio</span>
+        <div class="card-body">
+          <span class="card-name">Nothing Headphones</span>
+          <span class="card-desc">Great sound, great looks. My daily headphones for focus and travel.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">$149</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" data-category="audio" href="https://amzn.to/3PJiEiH" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-dji-mic-mini.jpg" alt="DJI Mic Mini" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Audio</span>
+        <div class="card-body">
+          <span class="card-name">DJI Mic Mini</span>
+          <span class="card-desc">Tiny wireless mic with surprisingly pro audio. Perfect for run-and-gun.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">$99</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- ── DESK SETUP ── -->
+    <a class="card" data-category="desk" href="https://amzn.to/3Q7zLLa" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-macbook-pro.jpg" alt="MacBook Pro" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Desk Setup</span>
+        <div class="card-body">
+          <span class="card-name">MacBook Pro</span>
+          <span class="card-desc">My main machine for editing, designing, and everything in between.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">From $1,599</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" data-category="desk" href="https://amzn.to/4u1F4cU" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-keychron-keyboard.jpg" alt="Keychron K2 HE" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Desk Setup</span>
+        <div class="card-body">
+          <span class="card-name">Keychron K2 HE</span>
+          <span class="card-desc">Hall effect switches, compact 75% layout. My favorite keyboard by far.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">$99</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- ── MOBILE ── -->
+    <a class="card" data-category="mobile" href="https://amzn.to/3Sa2xLC" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-iphone-air.jpg" alt="iPhone Air" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Mobile</span>
+        <div class="card-body">
+          <span class="card-name">iPhone Air</span>
+          <span class="card-desc">Incredibly thin, light, and capable. The best iPhone for creators on the move.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">From $899</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" data-category="mobile" href="https://amzn.to/4nY9J9M" target="_blank" rel="noopener">
+      <div class="card-image"><img src="thumb-ipad-mini.jpg" alt="iPad mini" loading="lazy" /></div>
+      <div class="card-content">
+        <span class="card-tag">Mobile</span>
+        <div class="card-body">
+          <span class="card-name">iPad mini</span>
+          <span class="card-desc">My go-to for reading, sketching, and consuming content on the go.</span>
+        </div>
+        <div class="card-footer">
+          <span class="card-price">From $499</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </div>
+    </a>
+
+  </main>
+  </div>
+
+  <div class="empty" id="empty">No products in this category yet.</div>
+
+  <footer>
+    <div class="footer-top">
+      <span>My Stack — updated 2026</span>
+    </div>
+    <p class="footer-disclaimer">
+      Some links on this page are affiliate links. If you purchase through them, I may earn a small commission at no extra cost to you — every purchase directly supports my work and helps me keep creating. Thank you.
+    </p>
+  </footer>
+
+  <script>
+    const buttons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.card');
+    const gridWrapper = document.getElementById('grid-wrapper');
+    const empty = document.getElementById('empty');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        let visibleCount = 0;
+        cards.forEach(card => {
+          const match = filter === 'all' || card.dataset.category === filter;
+          card.classList.toggle('hidden', !match);
+          if (match) visibleCount++;
+        });
+
+        empty.style.display = visibleCount === 0 ? 'block' : 'none';
+        gridWrapper.style.display = visibleCount === 0 ? 'none' : 'block';
+      });
+    });
+  </script>
+
+</body>
+</html>
